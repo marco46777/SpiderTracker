@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spider Tracker</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/jpg" href="/image/web.jpg">
+</head>
+<body>
+
+    <div class="juego">
+        <img src="/image/logo.png" class="logo" alt="z">
+        <img src="image/white.png" class="white" alt="zx">
+        <div id="boton-ojos" class="sprite"></div>
+        <img src="/image/alert.png" class="logo1" alt="z">
+        <img src="/image/alert1.png" class="logo2" alt="z">
+
+        <div class="Pantalla">
+            <div id="mapa"></div>
+                <div id="loading">
+    <img src="image/trac.png" alt="Spidey Tracker" class="loading-img">
+    <div class="loading-barra"><div class="loading-relleno"></div></div>
+    <p class="loading-texto">CARGANDO...</p>
+        </div>
+           </div>
+
+        <div class="controles">
+        <div id="boton-head" class="ima">
+            <img src="image/conte.png" class= "cont"alt="g">
+            
+        </div>
+
+        <div class="botones">
+            <button class="red" id="btnStart">Start</button>
+            <button class="green" id="btnStop">Stop</button>
+            <button class="orange" id="btnAmpliar">Ampliar</button>
+        </div>
+    </div>
+<audio id="sound" src="audio/sound.mp3" loop preload="auto"></audio>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="js/mapa.js"></script>
+</body>
+</html>

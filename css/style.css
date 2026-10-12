@@ -1,0 +1,426 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+:root {
+    --ancho-dispositivo: 440px; 
+    --mapa-alto: 450px;         /* alto visible del mapa */
+    --sube: 30px;               /* cuánto sube el mapa detrás del logo (≈ alto del logo) */
+    --logo-ancho: 250px;        /* ancho del logo */
+    --sprite-escala: 0.6;       /* tamaño del sprite (1 = 81×83 px) */
+    --sprite-top: 22px;         /* altura del sprite */
+    --sprite-left: 24px;        /* distancia del sprite al borde izquierdo */
+    --botones-abajo: 28px;      /* distancia de los botones al borde de abajo */
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    font-family: monospace;
+    background: #152731;
+    color: #26345c;
+}
+
+/* ===== DISPOSITIVO VERTICAL ===== */
+.juego {
+    position: relative;    /* referencia para sprite, Spidey y botones */
+    width: 100%;
+    max-width: var(--ancho-dispositivo);
+    padding: 16px 16px 100px 16px;   /* abajo: espacio para Spidey y botones */
+    background: #3a5dce;
+    border: 5px solid #26345c;
+    border-radius: 25px 25px 45px 45px;
+    box-shadow: 0 8px 0 #26345c;
+    text-align: center;
+}
+
+h1 {
+    font-size: 22px;
+    color: #e4f8ff;
+}
+
+/* ===== PANTALLA / MAPA: sube por detrás del logo ===== */
+.Pantalla {
+    position: relative;
+    z-index: 1;            /* encierra los z-index internos de Leaflet */
+    width: 100%;
+    border: 4px solid #000;
+    margin-top: calc(var(--sube) * -1);
+}
+
+#mapa {
+    width: 100%;
+    height: calc(var(--mapa-alto) + var(--sube));
+}
+
+/* El control +/- de Leaflet baja para no quedar tapado por el sprite */
+.leaflet-top.leaflet-left {
+    top: 60px;
+}
+
+/* ===== LOGO: arriba al centro, sobrepuesto al mapa ===== */
+.logo {
+    display: block;
+    width: var(--logo-ancho);
+    max-width: 100%;
+    margin: 0 auto;
+    position: relative;
+    z-index: 3;
+    pointer-events: none;  /* se puede arrastrar el mapa a través del logo */
+}
+.logo1 {
+    --escala: 0.7;       /* tamaño en pantalla */
+
+    position: absolute;
+    top: 150px;
+    left: -12px;
+    width: calc(84px * var(--escala));
+    height: auto;        /* el alto se ajusta solo, sin deformar */
+    margin: 0;
+    z-index: 3;
+    pointer-events: none;
+    image-rendering: pixelated;   /* mantiene los píxeles nítidos al escalar */
+}
+.logo2 {
+    --escala: 0.7;       /* tamaño en pantalla */
+
+    position: absolute;
+    top: 200px;
+    left: -12px;
+    width: calc(84px * var(--escala));
+    height: auto;        /* el alto se ajusta solo, sin deformar */
+    margin: 0;
+    z-index: 3;
+    pointer-events: none;
+    image-rendering: pixelated;   /* mantiene los píxeles nítidos al escalar */
+}
+.white{
+    width: 80px;
+    margin-left: 350px;
+    position: absolute;
+    z-index: 3;
+    top: var(--sprite-top);
+    left: var(--sprite-left);
+    image-rendering: pixelated; /* mantiene los píxeles nítidos */
+    transform: scale(var(--sprite-escala));
+    transform-origin: top left;
+}
+
+/* ===== SPRITE: arriba a la izquierda ===== */
+.sprite {
+    position: absolute;
+    z-index: 3;
+    top: var(--sprite-top);
+    left: var(--sprite-left);
+    margin-left: -20px;
+    width: 81px;
+    height: 83px;
+    background: url('../image/re.png') 0 0 no-repeat;
+    image-rendering: pixelated; /* mantiene los píxeles nítidos */
+    transform: scale(var(--sprite-escala));
+    transform-origin: top left;
+}
+
+/* Se reproduce una vez y se queda en la X final */
+.sprite.play {
+    animation: secuencia 3s steps(45) forwards;
+}
+
+/* Se reproduce al revés: de la X a los ojos abiertos */
+.sprite.reverse {
+    animation: secuencia 3s steps(45) forwards reverse;
+}
+
+/* En bucle continuo (usa esta en vez de .play si lo prefieres) */
+.sprite.loop {
+    animation: secuencia-loop 3s steps(46) infinite;
+}
+
+@keyframes secuencia {
+    from { background-position: 0 0; }
+    to   { background-position: -3645px 0; } /* 45 × 81, el último fotograma */
+}
+@keyframes secuencia-loop {
+    from { background-position: 0 0; }
+    to   { background-position: -3726px 0; } /* 46 × 81, ancho total */
+}
+
+/* ===== PERSONAJE SPIDEY: abajo a la izquierda ===== */
+.ima {
+    --escala: 0.5;       /* tamaño en pantalla (1 = 74×119 px, 0.5 = mitad) */
+    --duracion: 5s;      /* duración de un ciclo completo */
+
+    position: absolute;
+    z-index: 3;
+    bottom: 16px;
+    width: 50px;
+    left: 18px;
+    width: calc(74px * var(--escala));     /* ancho de UN fotograma */
+    height: calc(119px * var(--escala));
+    margin: 0;
+    display: block;
+    background: url('../image/headspidey.png') 0 0 no-repeat;
+    background-size: calc(5624px * var(--escala)) calc(119px * var(--escala));
+    image-rendering: pixelated;
+    animation: ima-loop var(--duracion) steps(76) infinite;
+}
+
+@keyframes ima-loop {
+    from { background-position: 0 0; }
+    to   { background-position: calc(-5624px * var(--escala)) 0; }
+}
+
+/* ===== PERSONAJE SPIDEY: abajo a la izquierda ===== */
+.ima {
+    --escala: 0.5;       /* tamaño en pantalla (1 = 74×119 px, 0.5 = mitad) */
+    --duracion: 5s;      /* duración de un ciclo completo */
+
+    position: absolute;
+    z-index: 3;          /* puedes dejarlo así, ya no estorba */
+    bottom: 16px;
+    left: 18px;
+    width: calc(74px * var(--escala));
+    height: calc(119px * var(--escala));
+    margin: 0;
+    display: block;
+}
+
+/* El sprite ahora vive aquí, por encima del marco */
+.ima::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;          /* encima de .cont */
+    background: url('../image/headspidey.png') 0 0 no-repeat;
+    background-size: calc(5624px * var(--escala)) calc(119px * var(--escala));
+    image-rendering: pixelated;
+    animation: ima-loop var(--duracion) steps(76) infinite;
+}
+
+@keyframes ima-loop {
+    from { background-position: 0 0; }
+    to   { background-position: calc(-5624px * var(--escala)) 0; }
+}
+
+/* Marco azul: centrado detrás de Spidey */
+.cont {
+    --ajuste-x: 0px;     /* mueve el marco a los lados (negativo = izquierda) */
+    --ajuste-y: 0px;     /* mueve el marco arriba/abajo (negativo = arriba) */
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 53px;
+    height: auto;
+    transform: translate(calc(-50% + var(--ajuste-x)), calc(-50% + var(--ajuste-y)));
+    z-index: 0;          /* debajo del sprite (::after tiene 1) */
+    image-rendering: pixelated;
+}
+/* ===== BOTONES: fila abajo, a la derecha de Spidey ===== */
+button {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 0;
+    cursor: pointer;
+    image-rendering: pixelated;
+    position: absolute;
+    top: auto;
+    bottom: var(--botones-abajo);
+    text-transform: uppercase;
+    z-index: 3;
+}
+
+/* Esquinas "cortadas" tipo píxel + borde negro grueso */
+.red, .green, .orange {
+    box-shadow:
+        /* borde negro escalonado */
+        -4px 0 0 0 #000,
+         4px 0 0 0 #000,
+         0 -4px 0 0 #000,
+         0  4px 0 0 #000,
+        /* sombra inferior para dar profundidad */
+         inset -4px -4px 0 0 rgba(0,0,0,.35),
+         inset  4px  4px 0 0 rgba(255,255,255,.35);
+}
+
+/* De derecha a izquierda: AMPLIAR, STOP, START */
+.orange { right: 22px;  background-color: orangered; }
+.green  { right: 132px; background-color: green; }
+.red    { right: 212px; background-color: red; }
+
+.red:hover {
+    background-color: #e4f8ff;
+    color: #000;
+}
+.green:hover {
+    background-color: #e4f8ff;
+}
+.orange:hover {
+    background-color: aliceblue;
+}
+
+/* Efecto de presionar */
+button:active {
+    transform: translateY(4px);
+    box-shadow:
+        -4px 0 0 0 #000,
+         4px 0 0 0 #000,
+         0 -4px 0 0 #000,
+         0  4px 0 0 #000;
+}
+
+/* ===== MAPA OSCURO ===== */
+.leaflet-tile-pane {
+    filter: invert(1) hue-rotate(200deg) brightness(0.9) contrast(0.95) saturate(0.8);
+}
+
+/* ===== MARCADOR HEXAGONAL CON BORDE ===== */
+.hex {
+    width: 40px;
+    height: 44px;
+    display: flex;
+    image-rendering: pixelated;
+    align-items: center;
+    justify-content: center;
+    clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+}
+.hex-in {
+    width: 34px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    image-rendering: pixelated;
+    justify-content: center;
+    clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+}
+
+/* ===== VISOR DE TELARAÑA EN LA ESQUINA DEL MAPA ===== */
+.visor-wrap {
+    position: absolute;
+    right: 8px;
+    bottom: 22px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    transform: scale(0.8);
+    transform-origin: bottom right;
+}
+.visor-borde {
+    width: 150px;
+    height: 164px;
+    background: #444444;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+}
+.visor-web {
+    width: 142px;
+    height: 156px;
+    background: #0b1d12;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+}
+.visor-web svg {
+    width: 130px;
+    height: 130px;
+}
+.barrido {
+    transform-origin: 50% 50%;
+    animation: girar 3s linear infinite;
+}
+@keyframes girar {
+    to { transform: rotate(360deg); }
+}
+.visor-info {
+    font-family: monospace;
+    font-size: 10px;
+    color: #69db7c;
+    background: #0b1d12;
+    padding: 2px 6px;
+    border: 1px solid #69db7c;
+}
+
+
+.detenido {
+    filter: grayscale(1) brightness(0.6);
+    pointer-events: none;
+}
+.detenido .barrido,
+.detenido .visor-wrap * {
+    animation-play-state: paused !important;
+}
+
+/*LOADING*/
+/* ===== LOADING: mismo tamaño que .Pantalla / #mapa ===== */
+#loading {
+    position: absolute;
+    inset: 0;
+    z-index: 2000;               /* por encima de los controles de Leaflet (1000) */
+    background: #0a1a4a;
+    overflow: hidden;
+    transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+#loading.oculto {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.loading-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.loading-barra {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 16px;
+    background: #0b1d4d;
+    border: 3px solid #fff;
+    image-rendering: pixelated;
+}
+
+.loading-relleno {
+    height: 100%;
+    width: 0;
+    background: repeating-linear-gradient(90deg, #51cf66 0 8px, #2f9e44 8px 10px);
+    animation: llenar 2.2s steps(10) forwards;
+}
+
+.loading-texto {
+    position: absolute;
+    top: calc(55% + 34px);
+    left: 0;
+    width: 100%;
+    margin: 0;
+    text-align: center;
+    color: #fff;
+    font-family: monospace;
+    letter-spacing: 3px;
+    font-size: 14px;
+}
+
+@keyframes llenar {
+    to { width: 100%; }
+}
