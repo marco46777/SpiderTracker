@@ -238,8 +238,18 @@ button {
     text-transform: uppercase;
     z-index: 3;
 }
+@media (max-width: 400px) {
+    button {
+        font-size: 6px;
+        padding: 10px 6px;
 
-/* Esquinas "cortadas" tipo píxel + borde negro grueso */
+    }
+   .white {
+        left: auto;
+        right: -40px;   /* sube este número para ir más a la izquierda */
+    }
+}
+
 .red, .green, .orange {
     box-shadow:
         /* borde negro escalonado */
